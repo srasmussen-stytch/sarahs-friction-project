@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cute or Very Cute?</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            font-family: sans-serif;
+        }
+        img {
+            max-width: 500px;
+            max-height: 500px;
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 0 10px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Cute or Very Cute?</h1>
+    {% if image_file %}
+    <img src="{{ url_for('static', filename='images/' + image_file) }}" alt="Image">
+    <form id="rating-form" method="post">
+        <button type="submit" name="cute" value="1">Cute</button>
+        <button type="submit" name="cute" value="0">Very Cute</button>
+    </form>
+    {% endif %}
+
+    <script>
+        document.getElementById('rating-form').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent default form submission
+            fetch('/', { //send request to the same route
+                method: 'POST',
+                body: new FormData(this)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if(data.success) {
+                    location.reload(); // Reload the page to get a new image
+                }
+            });
+        });
+
+    </script>
+</body>
+</html>
